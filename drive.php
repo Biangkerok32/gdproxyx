@@ -5,21 +5,14 @@ function inbtwn($input, $startcut, $finishcut){
     $output = $a2[0];
 return $output;
 }
- ini_set('max_execution_time', 0); 
+error_reporting(E_ERROR);
 include("config.php");
 $domain = base64_decode($_GET['dom']);
-$title = $_GET['title'];
-$title = str_replace(" ","_", $title);
-$title = str_replace("&","_", $title);
 $id = $_GET['id'];
-if(!$title=="") {
-header('Content-Disposition: attachment; filename=' . $title); 
-}
 $itag = $_GET['itag'];
 $source = $_GET['source'];
 $requiressl = $_GET['requiressl'];
 $ttl = $_GET['ttl'];
-$susci = $_GET['susci'];
 $mm = $_GET['mm'];
 $mn = $_GET['mn'];
 $ms = $_GET['ms'];
@@ -41,27 +34,27 @@ $app = $_GET['app'];
 $api = $_GET['api'];
 $ck = $_GET['ck'];
 
-$v = "".$domain."videoplayback?id=$id&itag=$itag&source=$source&requiressl=$requiressl&ttl=$ttl&mm=$mm&mn=$mn&ms=$ms&mv=$mv&pl=$pl&ei=$ei&driveid=$driveid&mime=$mime&lmt=$lmt&mt=$mt&ip=$ip&ipbits=$ipbits&susci=$susci&expire=$expire&cp=$cp&sparams=$sparams&signature=$signature&key=$key&app=$app";
+$v = "".$domain."videoplayback?id=$id&itag=$itag&source=$source&requiressl=$requiressl&ttl=$ttl&mm=$mm&mn=$mn&ms=$ms&mv=$mv&pl=$pl&ei=$ei&driveid=$driveid&mime=$mime&lmt=$lmt&mt=$mt&ip=$ip&ipbits=$ipbits&expire=$expire&cp=$cp&sparams=$sparams&signature=$signature&key=$key&app=$app";
 
  $e = $_GET['expire'];
 include("config.php");
  set_time_limit(0);
  $driverget = openssl_decrypt(base64_decode($driver), $encrypt_method, $key, 0, $iv);
- 
+
 $id = inbtwn($driverget , "<div>" , "</div>");
 $ex = inbtwn($driverget , "<t>" , "</t>");
- 
+
 $md5 = md5($ck);
 $md52 = md5($driveid);
-  
- 
-$current = time(); 
- 
+
+
+$current = time();
+
 //if($ex ==$e) {
 //if($current < $ex) {
 if($_COOKIE[$md52] ==$md5) {
 } else {
- 
+
 }
  //} else {
 //header("HTTP/1.0 404 Not Found");
@@ -74,15 +67,15 @@ if($_COOKIE[$md52] ==$md5) {
 //die;
 //}
 
-function size($address, $cookiz1) { 
- 
- 
+function size($address, $cookiz1) {
+
+
  $ch = curl_init();
  $useragent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36";
  curl_setopt($ch, CURLOPT_HTTPHEADER, array("Cookie: DRIVE_STREAM=".$cookiz1));
  curl_setopt($ch, CURLOPT_VERBOSE, 1);
 curl_setopt($ch, CURLOPT_TIMEOUT, 222222);
- 
+
  curl_setopt($ch, CURLOPT_URL, $address);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
  curl_setopt($ch, CURLOPT_HEADER, true);
@@ -91,20 +84,20 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
  curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
  curl_setopt($ch, CURLOPT_NOBODY, true);
  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
- 
+
  $info = curl_exec($ch);
 
 
 $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-  
- 
- 
- 
+
+
+
+
 return $size;
 }
 
 
-function stream($address, $cookiz1) { 
+function stream($address, $cookiz1) {
  $ch = curl_init();
  $useragent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36";
  curl_setopt($ch, CURLOPT_HTTPHEADER, array("Cookie: DRIVE_STREAM=".$cookiz1));
@@ -118,17 +111,17 @@ function stream($address, $cookiz1) {
  curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
  curl_setopt($ch, CURLOPT_NOBODY, true);
  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
- 
+
  $info = curl_exec($ch);
 
 
 $size2 = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
- 
 
 
- 
 
-header("Content-Type: video/mp4"); 
+
+
+header("Content-Type: video/mp4");
 $filesize = $size2;
 
 $offset = 0;
@@ -140,23 +133,23 @@ if ( isset($_SERVER['HTTP_RANGE']) ) {
     $length = $size2 - $offset -1;
 } else {
     $partialContent = "false";
-} 
+}
 if ( $partialContent =="true") {
     header('HTTP/1.1 206 Partial Content');
-    header('Accept-Ranges: bytes'); 
+    header('Accept-Ranges: bytes');
     header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
 } else {
-header('Accept-Ranges: bytes'); 
+header('Accept-Ranges: bytes');
 }
 header("Content-length: ".$size2);
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
 }
- 
+
 
 function StartsWith($Haystack, $Needle){
     // Recommended version, using strpos

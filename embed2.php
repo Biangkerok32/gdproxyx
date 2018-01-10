@@ -19,7 +19,7 @@ $md52 = md5($e);
 	}
 	// if there is either no file OR the file to too old, render the page and capture the HTML.
 	ob_start();
- 
+
 $ch = curl_init("https://drive.google.com/get_video_info?docid=$driver");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 // get headers too with this line
@@ -36,8 +36,8 @@ foreach($matches[1] as $item) {
     parse_str($item, $cookie);
     $cookies = array_merge($cookies, $cookie);
 }
-$cookiz = str_replace("DRIVE_STREAM=" ,"" , $matches[1]); 
- 
+$cookiz = str_replace("DRIVE_STREAM=" ,"" , $matches[1]);
+
 $data = $result;
 parse_str($data,$data);
 		$sources = explode(',',$data['fmt_stream_map']);
@@ -47,36 +47,36 @@ parse_str($data,$data);
 			//$quality = str_replace([18,59,22,37],[360,480,720,1080],$source[0]);
 			$source[1] = preg_replace('/[^\/]+\.google\.com/','redirector.googlevideo.com',$source[1]);
 			$source[1] = preg_replace('/app=[^\/&]+/',"app=free",$source[1]);
- 
+
 			$expire = preg_match('/expire=([\d]+)/',$source[1],$expire)?$expire[1]:false;
 		}
-			 $sources = str_replace("|" ,"<file>" , $sources); 
- 
-			$sources = preg_replace('@<file>https://(.*)@si','<file>https://$1&apps=mizi.ml</file>',$sources);
-			$sources = str_replace("c.drive.google.com" ,"googlevideo.com" , $sources); 
+			 $sources = str_replace("|" ,"<file>" , $sources);
+
+			$sources = preg_replace('@<file>https://(.*)@si','<file>https://$1&apps='.$_SERVER['SERVER_NAME'].'</file>',$sources);
+			$sources = str_replace("c.drive.google.com" ,"googlevideo.com" , $sources);
  	ob_start();
 print_r($sources, false);
- 
+
 $output = ob_get_contents();
-$output = str_replace("%2C" ,"," , $output ); 
-//$output = str_replace("&" ,"%26" , $output ); 
-$output = str_replace("18<file>" ,"<quality>360</quality><file>" , $output ); 
-$output = str_replace("59<file>" ,"<quality>480</quality><file>" , $output ); 
-$output = str_replace("22<file>" ,"<quality>720</quality><file>" , $output ); 
-$output = str_replace("37<file>" ,"<quality>1080</quality><file>" , $output ); 
+$output = str_replace("%2C" ,"," , $output );
+//$output = str_replace("&" ,"%26" , $output );
+$output = str_replace("18<file>" ,"<quality>360</quality><file>" , $output );
+$output = str_replace("59<file>" ,"<quality>480</quality><file>" , $output );
+$output = str_replace("22<file>" ,"<quality>720</quality><file>" , $output );
+$output = str_replace("37<file>" ,"<quality>1080</quality><file>" , $output );
 ob_end_clean();
 
 $regex3='|</quality><file>(.+?)</file>|';
 preg_match_all($regex3,$output,$parts3);
 $sort3 = $parts3[1];
- 
-	$links3=$sort3;  
- 
+
+	$links3=$sort3;
+
 $regex2='|<quality>(.+?)</quality>|';
 preg_match_all($regex2,$output,$parts2);
 $sort2 = $parts2[1];
 
-	$links2=$sort2;  
+	$links2=$sort2;
 
 include("servers.php");
 include("config.php");
@@ -97,9 +97,9 @@ $links3[$i -1] = preg_replace('@&driveid=(.+?)&@si',"&driveid=$enc&api=$cookiz[0
 $vf[] = array();
 $lafbel = $links2[$i -1];
 $fulllink = $proxy.$links3[$i -1];
-$denc = base64_encode($links3[$i -1]); 
-$denc = str_replace("-", "/", $denc); 
-$denc = str_replace("+", "_", $denc);      
+$denc = base64_encode($links3[$i -1]);
+$denc = str_replace("-", "/", $denc);
+$denc = str_replace("+", "_", $denc);
 
 $vf[$kiz] = $fulllink;
 $vki = $vf;
@@ -111,7 +111,7 @@ $posterk = PosterImg('https://drive.google.com/file/d/'.$driver.'/view');
   $vid['result'][0]['link'] = $vki;
   $vid['result'][0]['img'] = $posterk;
     $vidarray = json_encode($vid, JSON_PRETTY_PRINT);
-?> 
+?>
 
 
 <!DOCTYPE html>
@@ -121,7 +121,7 @@ $posterk = PosterImg('https://drive.google.com/file/d/'.$driver.'/view');
   <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body, html {margin:0px !important; border-radius:0px !important; padding:0px !important;}
- 
+
     #vjs-image-overlay-holder { -webkit-transition: all 0.2s linear; transition: all 0.2s linear; height:auto !important;
     width: 100%; opacity:0;
     max-width: 250px;
@@ -164,11 +164,11 @@ body, html {margin:0px !important; border-radius:0px !important; padding:0px !im
 <body>
      <video id="uniqueID" class="video-js vjs-fluid vjs-16-9" controls preload="auto" width="640" height="264" poster="<?php echo $posterk; ?>" data-setup='{}'>
 <?php
-         
+
        echo $sourcesx;
-    
+
          ?>
-                
+
       </video>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- VIDEOJS JS -->
@@ -181,11 +181,11 @@ body, html {margin:0px !important; border-radius:0px !important; padding:0px !im
             document.body.getcss = true;
         }
 videojs('uniqueID', {
-      
+
     controls: true,
     plugins: {
       videoJsResolutionSwitcher: {
-      
+
       }
     }
   }, function(){
@@ -206,12 +206,12 @@ player.on('playing', function(e) {
   }
 })
 
-  
-  })    
+
+  })
 
           $(document).ready(function(){
     $('video').bind('contextmenu',function() { return false; });
-              
+
 });
         });
     </script>
